@@ -3,6 +3,60 @@ using namespace std;
 
 struct nodo{int info; nodo* next; nodo(int x=0,nodo*y=0){info=x; next=y;}};
 
+
+/*Iterativa
+ Lista corretta e y definito*/
+nodo*togli(nodo*C,int y){
+	
+	FIFO a;
+	while(C){
+		if(C->info == y){
+			nodo*temp=C;
+			C=C->next;
+			delete temp;
+		}
+		else{
+			nodo*b=C;
+			C=C->next;
+			a=metti_fondo(a,b);
+		}
+	}
+	return a.primo;
+}
+/*Restituisce la lista che resta eliminando da C i nodi
+ * con campo info=y che vengono deallocati, nessun nuovo 
+ * nodo è allocato.*/
+ 
+ /*Ricorsiva
+  C lista corretta*/
+nodo*no_rip(nodo*C){
+	if(!C)
+	return 0;
+	
+	C->next=togli(C->next,C->info);
+	
+	C->next=no_rip(C->next);
+	
+	return C;  
+}
+  /*restituisce quello che resta di c mantendendo
+  solo il primo nodo con un dato campo info
+  ed eliminando i nodi successivi con lo stesso campo info
+  i nodi sono deallocati e nessun nodo viene creato con new*/
+
+void elim(nodo*&T,nodo*C){
+	while(C){
+		T=togli(T,C->info);
+		C=C->next;
+	}
+}
+/*iterativa
+ date 2 liste concatenate T e C
+ * elimina da T tutti quei nodi he hanno campo info
+ * uguale ad un nodo di C 
+ */
+
+
 nodo*del_end(nodo*Q){
 	
 	if(!Q->next)
