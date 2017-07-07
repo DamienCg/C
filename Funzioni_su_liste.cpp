@@ -107,6 +107,239 @@ nodo*concateno(nodo*x,nodo*y){
 }//concateno x e y
 
 
+
+// PRE = (L è una lista ordinata in modo crescente)
+nodo* inserisci_in_ordine(int k, nodo *L){
+    if(!L)
+     return new nodo(k,0);
+     
+     if(!L->next && k >= L->chiave){//(1)
+         nodo*z=new nodo(k,0);
+         L->next=z;
+         return L;
+     }
+     
+     if(k >= L->chiave && L->next->chiave >= k){ //(2)
+     nodo*z=new nodo(k,L->next);
+     L->next=z;
+     return L;
+     }
+     
+     if(k <= L->chiave){//(3)
+         nodo*z=new nodo(k,L);
+         return z;
+     }
+     
+     else//(4)
+     L->next=inserisci_in_ordine(k,L->next);
+}
+// POST = (inserisce k in L mantenendo l'ordine e ritorna la lista aggiornata)
+/*
+Caso Base:
+lista vuota inserisco k e ritorno un nuovo nodo
+la lista è corretta e ordinata => POST (OK)
+passo induttivo:
+lista non vuota, caso 
+
+1: 
+sono nel punultimo nodo
+k >= L->key
+allora inserisco un nuovo nodo z dopo L,
+z->next=0
+Ritorno L che punta a z, lista ordinata =>POST
+
+2:
+k >= key e sapendo grazie al caso 1 che non mi trovo nel penultimo nodo
+accedo alla key di L->next, inserendo k (come nuovo nodo) tra L e L->next
+ritornando L che punta ad una lista ordinata=>POST
+
+3:
+k <= key, k viene posizionato in testa e viene ritornato poichè punta ad una lista corretta.
+
+4:
+Passo induttivo:
+chiamo ricorsivamente con l istruzione
+L->next=Chiamata ricorsiva
+da caso base e da 1,2,3 so di per carto che mi verra restituita una lista corretta
+e ordinata, quindi L punterà ad essa =>POST
+*/
+
+//---------------------------------------------------------------
+
+bool trovamatch(nodo*x,int*p,int dimP){
+    
+    if(!dimP)
+     return true;
+    
+    if(!x)
+     return false;
+    
+     if(x->info == *p)
+      return trovamatch(x->next,p+1,dimP-1);
+     
+      else
+      return false;
+}
+
+nodo*inshead(nodo*a,nodo*x){
+    if(!a){
+        x->next=0;
+        return x;
+    }
+    else
+        x->next=a;
+    
+}//inserisco x in testa ad a
+
+
+nodo*match(nodo*& n,int*P,int dimP){
+    
+    if(!n || !dimP)
+    return 0;
+    
+    if(trovamatch(n,P,dimP)){
+        nodo*x=n;
+        nodo*L2=match(n->next,P+1,dimP-1);//(!)
+        n=n->next;
+        L2=inshead(L2,x);//(!!)
+        return L2;
+    }
+    
+    return match(n->next,P,dimP);
+}
+/*
+
+POST:
+POST=(in L(n) c’è un match CONTIGUO! di P, allora la funzione restituisce col return match(vL(n),P[0..dimP-1]) e
+L(n)=resto_mach(vL(n),P[0..dimP-1], se invece non c’è il match allora la funzione restituisce 0 e L(n)=vL(n))
+
+Correttezza:
+
+Caso base:
+n lista vuota, OR il match da cercare è nullo.
+ritorno 0 =>POST
+
+Passo induttivo:
+La chiamata (!) viene effettuata solo se è presente un match,
+
+Andata: 
+memorizzo in puntatore x il valore di n,
+quindi alla fine delle chiamate in tutti gli stack ancora attivi ci saranno
+puntatori x che punteranno a i nodi che sono un match,
+
+Ritorno:
+dato che ritorno solo da chiamate contenenti un match, n attuale al ritorno
+punterà a gli stessi nodi che punta x, cioè a nodi di match
+n=n->next, elimina gli n dalla lista originale, e con la chiamata (!!)
+inserisco in testa a L2 tutti i nodi match, creando la lista da restituire con il return.
+*/
+
+//--------------------------------------------------------------
+
+nodo*inshead(nodo*L,nodo*x){
+    if(!L)
+    {x->next=0; return x;}
+    else
+    x->next=L;
+}
+
+/*PRE=(L(T) è corretta, dimP>0, P ha dimP elementi definiti)*/
+nodo* match (nodo* & T, int * P, int dimP){
+    
+    if(!T)
+    return 0;
+    
+    if(dimP==1 && T->info == *P){//(!!)
+    nodo*x=T; T=T->next; x->next=0; return x; }
+    
+    if(T->info == *P){//(!)
+        nodo*x=T;
+        nodo*L=match(T->next,P+1,dimP-1);
+        if(L){
+        T=T->next;
+        L=inshead(L,x);
+        return L;
+        }
+
+     }
+    else
+    return match(T->next,P,dimP);
+}
+/*POST=(se c’è un match (anche non contiguo) di P in L(T) allora la funzione restituisce col return la lista del match e in T la lista
+restante, altrimenti, restituisce 0 col return e T punta alla stessa lista cui puntava all’inizio).
+Correttezza:
+
+Caso base:
+se !T allora il match non esiste, ritorno 0,
+se il match da trovare è li lunghezza 1, allora mi salvo
+la posizione dell unico nodo da rimuovere elimino da T (T=T->next) 
+mi assicuro che il nodomatch punti a 0 e restituisco x nodomatch
+
+Passo induttivo:
+(!) viene eseguito solo se in posizione T esiste un nodo che è uguale a *P,
+allora all andata vengono salvati in x, tutti i nodi con campo info uguali a P,
+al ritorno il caso base (!!), ci garantisce che se abbiamo trovato il match completo
+allora L sarà uguale alla coda del match, quindi al ritorno valuto L, 
+se L vero (contiene la coda del caso (!!)),
+allora elimino i nodi T che sono sicuramente nodi match, e inserisco in testa i valori x che sono
+i nodi match.
+inshead mi garantisce che la coda non viene toccata, inserendo sempre in testa.
+*/
+
+
+//--------------------------------------------------
+
+
+doppialista*inshead(doppialista*L,nodo*x){
+    if(!L){
+     x->next=0;
+     return new doppialista(x,0);
+    }
+    else{
+    x->next=L->listamatch;
+    L->listamatch=x;
+    return L;
+    }
+}
+//inserisco x in testa a L
+doppialista*match(nodo*T,int*P,int dimP){
+    
+    if(!T){
+        if(dimP != 0)
+            return 0;
+            else
+    return new doppialista(0,0);
+    }
+    
+    doppialista*L=0; nodo*x=0; nodo*y=0; 
+    
+      if(T->info == *P)
+        x=T; //x è nodo match
+        else
+        y=T; //y è restante
+    
+    if(x){
+        L=match(T->next,P+1,dimP-1);
+          if(!L)
+        return 0;
+        else
+           L=inshead(L,x); 
+    }
+    else if(y){
+        L=match(T->next,P,dimP);
+        if(!L)
+        return 0;
+        else
+        L=insheadR(L,y);
+    }
+  
+}
+/*POST=(se esiste match di P in L(T) allora match2 restituisce il puntatore X ad un valore di tipo doppialista
+tale che X->listamatch sia la lista del match trovato e X->restante sia la lista restante, se invece non c’è
+match, match2 restituisce il puntatore 0 e L(T) resta inalterata).*/
+
+
+
 nodo*stacco_primi_k_nodi(nodo*&P,int k){
 
 if(!P->next){
