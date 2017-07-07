@@ -256,6 +256,31 @@ nodo*build_iter(int*C,nodo*r){
 		return rit;
 }
 
+FIFO pickric_infix(nodot*R, int &n, int k){
+    if(!R)
+    return FIFO();
+    
+    FIFO x=pickric_infix(R->left,n,k);
+    
+    if(n==k){
+        nodo*t=new nodo(R->info,0);
+        x=push_end(x,t);
+        n=1;
+    }
+    else
+    n++;
+    
+    FIFO y=pickric_infix(R->right,n,k);
+    
+    return concF(x,y);
+}
+/*
+POST=(restituisce un valore FIFO f tale che f.primo sia una lista L tale che i nodi abbiano i campi info di
+valore uguale ai campi info dei nodi dell'albero Tree(R) che si trovano nella posizione vn, vn+k, vn+2*k,
+eccetera rispetto all'ordine infisso, inoltre n-1 è il numero di nodi presenti nell'albero che seguono, rispetto
+all'ordine infisso, il nodo dell'albero in corrispondenza del quale si è creato l'ultimo nodo di L).
+INFISSO S-N-D
+*/
 int main(){
 
 nodo*quarto=new nodo('r',0,0);
