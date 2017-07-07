@@ -108,6 +108,79 @@ nodo*concateno(nodo*x,nodo*y){
 
 
 
+bool esiste(nodo*Q,int k){
+    if(!Q)
+    return false;
+    
+    if(Q->info == k)
+    return true;
+    else
+    return esiste(Q->next,k);
+}
+//true sse k esiste in Q
+
+//PRE=(L(Q) è una lista corretta e vL(Q)=L(Q))
+FIFO tieni_ultimo_ric(nodo*&Q){
+    if(!Q)
+     return FIFO();
+    
+    FIFO x=tieni_ultimo_ric(Q->next);//(!)
+    if(esiste(Q->next,Q->info)){//allora lo inserisco nella lista da ritornare
+        nodo*t=Q;
+        Q=Q->next;
+        x=push_begin(x,t);
+    }
+    return x;
+}
+/*POST=(L(Q) è ottenuta da vL(Q) eliminando i nodi con info ripetuto mantenendo solo l'ultimo nodo per
+ciascun campo info e mantenendo l'ordine relativo che questi nodi hanno in vL(Q). Inoltre restituisce un
+valore FIFO f tale che f.primo è la lista dei nodi eliminati nello stesso ordine relativo che essi hanno in vL(Q))
+esempio: : sia vL(Q)= 0->1->0->2->1->0->0->2->0, allora vL(Q) deve diventare L(Q) =1->2->0.
+
+Prova induttiva:
+Caso base: Q lista vuota, allora ritorno un valore da costruttore FIFO, cioè una lista vuota,
+nessun nodo di uguale campo info, regolare =>POST.
+Passo induttivo:
+Q non è vuota Chiamo ricorsivamente con (!),
+al ritorno valuto se il nodo in cui mi trovo è un nodo che è presente in Q->next,
+se è presente allora lo aggiungo alla lista da eliminare poichè devo tenere solo gli ultimi nodi
+aggiungo Q a x e sposto Q con Q=Q->next, possibile poichè Q è passato come riferimento a puntatore,
+quindi tale istruzione cambia il nodo puntato da Q.
+alla fine ritorno x che contiene i nodi doppi eliminati da Q, e Q per ipotesi induttiva contiene
+gli ultimi campi info (tutti diversi di vQ) =>POST.
+*/
+ 
+//stessa cosa di quella sopra.
+FIFO tieni_ultimo_iter(nodo*&Q){
+    
+    FIFO x;
+    FIFO y; //nodi doppi
+    
+    while(Q){
+        if(esiste(Q->next,Q->info)){//aggiungo a y
+            nodo*t=Q;
+            Q=Q->next;
+            t->next=0;
+            y=push_end(y,t);
+        }
+        else{
+            nodo*t=Q;
+            Q=Q->next;
+            t->next=0;
+            x=push_end(x,t);
+        }
+    }
+    
+    Q=x.primo;
+    return y;
+}
+/*POST=(L(Q) è ottenuta da vL(Q) eliminando i nodi con info ripetuto mantenendo solo l'ultimo nodo per
+ciascun campo info e mantenendo l'ordine relativo che questi nodi hanno in vL(Q). Inoltre restituisce un
+valore FIFO f tale che f.primo è la lista dei nodi eliminati nello stesso ordine relativo che essi hanno in vL(Q))*/
+
+
+
+
 // PRE = (L è una lista ordinata in modo crescente)
 nodo* inserisci_in_ordine(int k, nodo *L){
     if(!L)
