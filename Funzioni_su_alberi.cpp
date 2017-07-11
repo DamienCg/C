@@ -56,6 +56,33 @@ int conta_nodi_di_un_albero(nodox*x){
 	return 0;
 }
 
+int altezza(nodo *x){
+  if(!x) 
+   return -1;
+ else {
+   int a=altezza(x->left);
+   int b=altezza(x->right);
+   if(a>b) return a+1;
+   return b+1;
+ }
+}//restituisce altezza di un albero
+
+
+//PRE=(albero(x) corretto, lung >=0, C[0..lung-1] def e 0/1)
+nodo * trova(nodo *x, int* C, int lung){ 
+   if(!x) 
+    return 0; // fallito
+if(!lung) 
+	return x; //trovato
+if(*C==0) 
+	return trova(x->left, C+1, lung-1);
+else
+return trova(x->right,C+1, lung-1);
+}
+/*POST=(restituisce punt. a nodo alla fine del
+cammino C[0..lung-1], se c’è in albero(x), e
+altrimenti 0*/
+
 nodo*ricerca(nodo*r,char z){
 	if(!r)
 	return 0;
