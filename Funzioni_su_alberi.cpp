@@ -308,6 +308,68 @@ eccetera rispetto all'ordine infisso, inoltre n-1 è il numero di nodi presenti 
 all'ordine infisso, il nodo dell'albero in corrispondenza del quale si è creato l'ultimo nodo di L).
 INFISSO S-N-D
 */
+nodo* max(nodo*r){
+if(!r) return 0;
+nodo*a=max(r->left);
+nodo*b=max(r->right);
+  if(a&&b){
+	nodo*c=maggiore(a,r); return maggiore(c,b); 
+  }
+ else
+  if(a)
+    return maggiore(a,r);
+  else if(b) 
+    return maggiore(r,b);
+else
+return r;
+}
+/*POST=(restituisce il puntatore al primo nodo con
+info max rispetto all’ordine infisso e 0 se r=0)*/
+
+int cncuf(nodo *x){ 
+if(x)
+if(!x->left && x->right || x->left &&!x->right)
+return 1+ cncuf(x->left)+cncuf(x->right);
+else
+return cncuf(x->left)+cncuf(x->right);
+else
+return 0;
+}//contare i nodi con esattamente un figlio
+
+nodo * prof_data(nodo * r, int k){
+if(! r ) 
+	return 0;
+if(k==0) 
+	return r;
+	
+nodo * p=prof_data(rleft,k-1);
+if(p) 
+	return p;
+	
+return prof_data(rright,k-1);
+}
+/*POST=(restituisce nodo a prof k se c’è e 0
+altrimenti*/
+
+int prof_min(nodo*x, int prof){
+	if(leaf(x)) 
+		return prof;
+int a=-1,b=-1;
+if(x->left)
+a=prof_min(x->left,prof+1);
+if(x->right)
+b=prof_min(x->right,prof+1);
+	
+if(a!=-1 && b!=-1)
+if(a <= b)
+return a;
+else
+return b;
+if(a!=-1) 
+	return a;
+return b;
+}
+
 int main(){
 
 nodo*quarto=new nodo('r',0,0);
