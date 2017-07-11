@@ -114,6 +114,19 @@ int pop2(nodo*& Q){
 }
 //elimina primo nodo di Q, restituisce campo info primo nodo.
 
+nodo* ins(nodo*Q, int k, int c){
+if(!k)
+return new nodo(c,Q);
+else
+  if(Q){
+	Q->next=ins(Q->next,k-1,c); 
+	return Q;
+  }
+ else
+  return 0;
+} //inserisce nodo in k esima posizione di Q
+
+
 void stampa(nodo*x){
 	
 	if(x){
