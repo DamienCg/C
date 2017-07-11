@@ -3,6 +3,45 @@ using namespace std;
 
 struct nodo{int info; nodo* next; nodo(int x=0,nodo*y=0){info=x; next=y;}};
 
+//PRE=(P[0..dimP-1] def., dimP>=0,L(Q) lista corretta, ok=false)
+nodo* match(char*P, int dimP, nodo* Q, bool & ok){
+if(!dimP) 
+{ok=true; return 0;}
+ 
+	if(!Q) return 0;
+
+	if(Q->info==*P){
+	nodo* x=match(P+1,dimP-1,Q->next, ok);
+	if(ok)
+	  return new nodo(Q,x);
+	else
+	  return 0;
+	}
+	else
+	  return match(P,dimP,Q->next,ok);
+}
+/*POST=(ok sse esiste match di P[0..dimP-1] in L(Q))&&(ok=> restituisce lista di
+nodop che punta a nodi di L(Q) con match)&&(!ok=> restituisce 0)*/
+
+//PRE=(P[0..dimP-1] def., dimP>0,L(Q) lista corretta)
+nodo* match(char*P, int dimP, nodo* Q) {
+  if(!Q) return 0;
+	if(Q->info==*P){
+	  if(dimP==1) return new nodop(Q,0);
+	else
+	  nodo* x=match(P+1,dimP-1,Q->next);
+	if(x)
+	  return new nodop(Q,x);
+	else
+	   return 0;
+	}
+	else
+	  return match(P,dimP,Q->next);
+}
+/*POST=(restituisce lista X non 0 sse esiste match di P[0..dimP-1] in L(Q))&&(X=>
+X è lista di nodop che punta a nodi di L(Q) con match)*/
+
+
 
 /*Iterativa
  Lista corretta e y definito*/
