@@ -138,19 +138,18 @@ int altezza(nodo*n){
 //nodox contiene in campo info un intero invece che un char
 void altezza_radicata(nodox* r){
   if(r){
-	if(!r->left && !r->right)
-	r->info=1;
-	else if(r->left && !r->right)
-	r->info=r->info+ r->left->info;
-	else if(!r->left && r->right)
-	r->info=r->info+ r->right->info;
-	else{
-	altezza_radicata(r->left);
-	altezza_radicata(r->right);
-	r->info=r->info+ r->left->info + r->right->info;
+	  altezza_radicata(r->left);
+	  altezza_radicata(r->right);
+	  int a=0;
+	  int b=0;
+	  if(r->left)
+		  a=r->left->n;
+	  if(r->right)
+		  b=r->right->n;
+	  r->n = a+b+1;
 	}
   }
-}
+
 //ogni nodo n dell albero, contiene nel suo campo info,
 //il numero di nodi radicati nel suo sottoalbero compreso se stesso!
 
