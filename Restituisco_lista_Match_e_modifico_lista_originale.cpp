@@ -63,8 +63,8 @@ nodo*match(nodo*& n,int*P,int dimP){
     return 0;
     
     if(trovamatch(n,P,dimP)){
-        nodo*x=n;
         nodo*L2=match(n->next,P+1,dimP-1);//(!)
+        nodo*x=n;
         n=n->next;
         L2=inshead(L2,x);(!!)
         return L2;
