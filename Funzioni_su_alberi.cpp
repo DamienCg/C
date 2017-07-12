@@ -143,10 +143,10 @@ void altezza_radicata(nodox* r){
 	  int a=0;
 	  int b=0;
 	  if(r->left)
-		  a=r->left->n;
+		  a=r->left->info;
 	  if(r->right)
-		  b=r->right->n;
-	  r->n = a+b+1;
+		  b=r->right->info;
+	  r->info = a+b+1;
 	}
   }
 
